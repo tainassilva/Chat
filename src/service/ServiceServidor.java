@@ -80,9 +80,11 @@ public class ServiceServidor {
                 }
             }
             catch (IOException ex) {
-                disconnect(mensagem,output);
-                sendOnlines();
-                System.out.println(mensagem.getNome()+ " deicou o chat");
+		ChatMessage message = new ChatMessage();
+		message.setNome(mensagem.getNome());
+		disconnect(message, output);
+		sendOnlines();
+		System.out.println(message.getNome() + " deixou o chat!");
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ServiceServidor.class.getName()).log(Level.SEVERE, null, ex);
             }
