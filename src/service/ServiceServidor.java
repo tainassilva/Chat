@@ -152,17 +152,18 @@ public class ServiceServidor {
             Logger.getLogger(ServiceServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void sendOne(ChatMessage message){
-         for (Map.Entry<String, ObjectOutputStream> kv : listandoOnline.entrySet()){
-             if(kv.getKey().equals(message.getReservado_nome())){
-        try {
-            kv.getValue().writeObject(message);
-        } catch (IOException ex) {
-            Logger.getLogger(ServiceServidor.class.getName()).log(Level.SEVERE, null, ex);
-       }
+    private void sendOne(ChatMessage message) {
+    for (Map.Entry<String, ObjectOutputStream> kv : listandoOnline.entrySet()) {
+        if (kv.getKey().equals(message.getReservado_nome())) {
+            try {
+                kv.getValue().writeObject(message);
+            } catch (IOException ex) {
+                Logger.getLogger(ServiceServidor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
-  }
 }
+
     private void sendAll(ChatMessage mensagem) {
        // Envia mensagem para todos os clientes
        for (Map.Entry<String, ObjectOutputStream> kv : listandoOnline.entrySet()){
