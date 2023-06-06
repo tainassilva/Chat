@@ -2,16 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Cliente.JFrameCliente;
+package frame;
 
-import Cliente.ChatMessage;
-import Cliente.ChatMessage.Action;
-import Cliente.ServiceCliente;
+import bean.ChatMessage;
+import bean.ChatMessage.Action;
+import service.ServiceCliente;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 /**
  *
@@ -47,13 +51,14 @@ public class ClienteJFrame extends javax.swing.JFrame {
                     Action action = message.getAcao();
                     
                     if (action.equals(Action.CONECTADO)){
-                        connect(message);
+                        connected(message);
                     } 
                     else if(action.equals(Action.DESCONECTADO)){
-                        disconnect(message);
+                        disconnected();
+                        socket.close();
                     }
                     else if(action.equals(Action.SEND_ONE)) { // envio de mensagens reservadas
-                        sendOne(message);
+                        receive(message);
                     }
                     else if (action.equals(Action.USUARIOS_ONLINE)){
                         refreshUsers(message);
@@ -68,13 +73,58 @@ public class ClienteJFrame extends javax.swing.JFrame {
         }
     }
     
-    private void connect (ChatMessage message){}
+    private void connected (ChatMessage message){
     
-    private void disconnect(ChatMessage message){}
+    if (message.getTexto().equals("NO")){
+        this.txtNome.setText("");
+        JOptionPane.showMessageDialog(this,"Não foi possivel realizar a conexão, tente novamente com um novo nome");
+        return;
+    }
+    // Caso a conexão seja feita, os botões vão ser ativados
+    this.message= message;  // passar o valor que foi recebido como mensagem
+    this.btnConectar.setEnabled(false); // desabilita o botão de "Conectar"
+    this.txtNome.setEditable(false);
+    this.btnSair.setEnabled(true);
+    this.txtAreaDigitarMensagem.setEnabled(true);
+    this.txtAreaRecebeMensagem.setEnabled(true);
+    this.btnEnviar.setEnabled(true);
+    this.btnLimpar.setEnabled(true);
+   
     
-    private void sendOne(ChatMessage message){}
+    JOptionPane.showMessageDialog(this, "Conexão realizada com sucesso");
     
-    private void refreshUsers(ChatMessage message){}
+    }
+    private void disconnected(){
+            this.btnConectar.setEnabled(true);
+            this.txtAreaDigitarMensagem.setEnabled(true);
+            this.btnSair.setEnabled(false);
+            this.txtAreaRecebeMensagem.setEnabled(false);
+            this.btnEnviar.setEnabled(false);
+            this.btnLimpar.setEnabled(false);
+            
+            this.txtAreaRecebeMensagem.setText("");
+            this.txtAreaDigitarMensagem.setText("");
+           
+            
+            JOptionPane.showMessageDialog(this, "Você saiu do chat");
+    
+    }
+    
+    private void receive(ChatMessage message){
+        this.txtAreaRecebeMensagem.append(message.getNome() + " diz " + message.getTexto()+ "\n");
+    }
+    
+    private void refreshUsers(ChatMessage message){
+        System.out.println(message.getSetOnlines().toString());
+        Set<String> names = message.getSetOnlines();
+        //jlist só aceita array como parametro
+        
+        names.remove((String)message.getNome());
+        String[] array = names.toArray(new String[names.size()]);
+        this.listOnlines.setListData(array);
+        this.listOnlines.setSelectionMode(SINGLE_SELECTION); // aceita uma unica seleção de nomes por vez
+        this.listOnlines.setLayoutOrientation(JList.VERTICAL); // um nome embaixo do outro
+    }
 
 
     /**
@@ -93,7 +143,6 @@ public class ClienteJFrame extends javax.swing.JFrame {
         btnSair = new javax.swing.JButton();
         txtNome = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        btnAtualizar = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         listOnlines = new javax.swing.JList<>();
         jPanel3 = new javax.swing.JPanel();
@@ -120,6 +169,7 @@ public class ClienteJFrame extends javax.swing.JFrame {
         });
 
         btnSair.setText("Sair");
+        btnSair.setEnabled(false);
         btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSairActionPerformed(evt);
@@ -159,18 +209,6 @@ public class ClienteJFrame extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Onlines"));
 
-        btnAtualizar.setText("Atualizar");
-        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtualizarActionPerformed(evt);
-            }
-        });
-
-        listOnlines.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane4.setViewportView(listOnlines);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -178,33 +216,31 @@ public class ClienteJFrame extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(btnAtualizar)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAtualizar))
-        );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        txtAreaRecebeMensagem.setEditable(false);
         txtAreaRecebeMensagem.setColumns(20);
         txtAreaRecebeMensagem.setRows(5);
+        txtAreaRecebeMensagem.setEnabled(false);
         jScrollPane2.setViewportView(txtAreaRecebeMensagem);
 
         txtAreaDigitarMensagem.setColumns(20);
         txtAreaDigitarMensagem.setRows(5);
+        txtAreaDigitarMensagem.setEnabled(false);
         jScrollPane3.setViewportView(txtAreaDigitarMensagem);
 
         btnEnviar.setText("Enviar");
+        btnEnviar.setEnabled(false);
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarActionPerformed(evt);
@@ -212,6 +248,7 @@ public class ClienteJFrame extends javax.swing.JFrame {
         });
 
         btnLimpar.setText("Limpar");
+        btnLimpar.setEnabled(false);
         btnLimpar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimparActionPerformed(evt);
@@ -282,71 +319,87 @@ public class ClienteJFrame extends javax.swing.JFrame {
             this.message.setAcao(Action.CONECTADO);
             this.message.setNome(nome);
             
-            if(this.socket == null){
+          
                 this.service = new ServiceCliente();
                 this.socket = this.service.connect();
                 
                 new Thread(new ListenerSocket(this.socket)).start();
-            }
-         
+            
            this.service.send(message);
         }
        
     }//GEN-LAST:event_btnConectarActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        // TODO add your handling code here:
+        ChatMessage message = new ChatMessage();
+        message.setNome(this.message.getNome());
+        message.setAcao(Action.DESCONECTADO);
+        this.service.send(message);
+        disconnected();
+       
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+        this.txtAreaDigitarMensagem.setText("");
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // TODO add your handling code here:
+    String text = this.txtAreaDigitarMensagem.getText();
+    String name = this.message.getNome();
+    this.message = new ChatMessage();
+    
+    if (this.listOnlines.getSelectedIndex() > -1) {
+        String selectedName = (String) this.listOnlines.getSelectedValue();
+        if (selectedName != null && !selectedName.isEmpty()) {
+            this.message.setReservado_nome(selectedName);
+            this.message.setAcao(Action.SEND_ONE);
+        }
+        this.listOnlines.clearSelection();
+    } else {
+        this.message.setAcao(Action.SEND_ALL);
+    }
+    
+    if (!text.isEmpty()) {
+        this.message.setNome(name);
+        this.message.setTexto(text);
+        
+        this.txtAreaRecebeMensagem.append(message.getNome() + " diz " + text + "\n");
+        this.service.send(this.message);
+    }
+    
+    this.txtAreaDigitarMensagem.setText("");
+
+
+
+
+//        String text = this.txtAreaDigitarMensagem.getText();
+//        String name = this.message.getNome();
+//        this.message = new ChatMessage(); // pra garantir que nao manda nada que não deva ir de mensagem
+//        
+//        // Pra ver se existe esse membro dentro da lista de usuários onlines
+//        if(this.listOnlines.getSelectedIndex() > -1){ // Maior que -1 significa que tem um nome selecionado ...se não existir nenhum index selecionado
+//               this.message.setReservado_nome((String)this.listOnlines.getSelectedValue());
+//               this.message.setAcao(Action.SEND_ONE);
+//               this.listOnlines.clearSelection(); // limpa a seleção do nome e não fica eternamente selecionado
+//        } 
+//        else{
+//            // Caso não tenha nenhum nome selecionado, enviamos para todos
+//            this.message.setAcao(Action.SEND_ALL);
+//        }
+//        
+//        if (!text.isEmpty()){
+//        this.message.setNome(name);
+//        this.message.setTexto(text);
+//        this.message.setAcao(Action.SEND_ALL);
+//        
+//        this.txtAreaRecebeMensagem.append(message.getNome()+ " diz " + text + "\n");
+//        this.service.send(this.message);
+//        }
+//        this.txtAreaDigitarMensagem.setText("");
     }//GEN-LAST:event_btnEnviarActionPerformed
 
-    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
-         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAtualizarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ClienteJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ClienteJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ClienteJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ClienteJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ClienteJFrame().setVisible(true);
-            }
-        });
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnLimpar;

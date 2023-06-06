@@ -1,5 +1,6 @@
-package Cliente;
+package service;
 
+import bean.ChatMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;

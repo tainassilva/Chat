@@ -1,4 +1,4 @@
-package Cliente;
+package bean;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -61,5 +61,11 @@ public class ChatMessage implements Serializable {
         CONECTADO, DESCONECTADO,SEND_ONE, SEND_ALL, USUARIOS_ONLINE
     }
     // Cada mensagem que o cliente manda para o sevidor qual é a ação que ele quer executar 
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" + "nome=" + nome + ", texto=" + texto + ", reservado_nome=" + reservado_nome + ", setOnlines=" + setOnlines + ", acao=" + acao + '}';
+    }
+    
     
 }
