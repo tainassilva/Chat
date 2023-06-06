@@ -41,7 +41,7 @@ public class ServiceServidor {
     private class ListenerSocket implements Runnable{
 
         private ObjectOutputStream output; // executa o envio de mensagens do servidor 
-        private ObjectInputStream input; // recevbe as mensagens enviada pelos clientes
+        private ObjectInputStream input; // recebe as mensagens enviada pelos clientes
         
         public ListenerSocket (Socket socket){
             try {
@@ -108,41 +108,18 @@ public class ServiceServidor {
         send(message, output);
         return true;
     } 
-
-//        sendOne(message);
-//         regra que evita que tenha 2 clientes com o mesmo nome
-//        if(listandoOnline.isEmpty()){ // Caso inicie a lista
-//            message.setTexto("Você se conectou!");
-//            sendOne(message);
-//            return true;
-//        }
-//        for (Map.Entry<String,ObjectOutputStream> kv : listandoOnline.entrySet()){  // Percorrendo a lista e testando se o nome que vier agora é dferente do que ja tem na lista
-//            if (kv.getKey().equalsIgnoreCase(message.getNome())){
-//                message.setNome("NO");
-//                send(message,output);
-//                return false; // a conexão não vai acontecer
-//            }
-//            else{
-//                message.setTexto("Conexão aceita");
-//                send(message,output);
-//                return true; // quando o nome da chave for diferente de qualquer um existente
-//            }
-//        }
-//        return false;
     }
      private void disconnect(ChatMessage mensagem, ObjectOutputStream output) {
             listandoOnline.remove(mensagem.getNome()); // remover usuário da nossa lista
             
-            mensagem.setTexto("Até logo!");
+            mensagem.setTexto("Até logo, estou saindo do chat!");
             
             // Mandando mensagem para todos quando desconectar
             mensagem.setAcao(Action.SEND_ONE);
             
             sendAll(mensagem);
             
-           System.out.println("User " + mensagem.getNome()+ " saiu da sala" );
-           
-                    
+           System.out.println("User " + mensagem.getNome()+ " saiu da sala" );         
         }
     
     private void send(ChatMessage message, ObjectOutputStream output){
@@ -190,7 +167,7 @@ public class ServiceServidor {
         ChatMessage message = new ChatMessage();
         message.setAcao(Action.USUARIOS_ONLINE);
         message.setSetOnlines(setNames);
-        // mandar esse set dos nomes das listas dos onlines como parametro
+        // mandar esse set dos nomes das listas dos onlines como parâmetro
         // Envia mensagem para todos os clientes
        for (Map.Entry<String, ObjectOutputStream> kv : listandoOnline.entrySet()){
            message.setNome(kv.getKey());

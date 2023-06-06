@@ -31,6 +31,7 @@ public class ClienteJFrame extends javax.swing.JFrame {
      */
     public ClienteJFrame() {
         initComponents();
+        setLocationRelativeTo(null);
     }
     
     private class ListenerSocket implements Runnable{
@@ -111,7 +112,7 @@ public class ClienteJFrame extends javax.swing.JFrame {
     }
     
     private void receive(ChatMessage message){
-        this.txtAreaRecebeMensagem.append(message.getNome() + " diz " + message.getTexto()+ "\n");
+        this.txtAreaRecebeMensagem.append(message.getNome() + " diz: " + message.getTexto()+ "\n");
     }
     
     private void refreshUsers(ChatMessage message){
@@ -363,40 +364,12 @@ public class ClienteJFrame extends javax.swing.JFrame {
         this.message.setNome(name);
         this.message.setTexto(text);
         
-        this.txtAreaRecebeMensagem.append(message.getNome() + " diz " + text + "\n");
+        this.txtAreaRecebeMensagem.append(message.getNome() + " diz: " + text + "\n");
         this.service.send(this.message);
     }
     
     this.txtAreaDigitarMensagem.setText("");
-
-
-
-
-//        String text = this.txtAreaDigitarMensagem.getText();
-//        String name = this.message.getNome();
-//        this.message = new ChatMessage(); // pra garantir que nao manda nada que não deva ir de mensagem
-//        
-//        // Pra ver se existe esse membro dentro da lista de usuários onlines
-//        if(this.listOnlines.getSelectedIndex() > -1){ // Maior que -1 significa que tem um nome selecionado ...se não existir nenhum index selecionado
-//               this.message.setReservado_nome((String)this.listOnlines.getSelectedValue());
-//               this.message.setAcao(Action.SEND_ONE);
-//               this.listOnlines.clearSelection(); // limpa a seleção do nome e não fica eternamente selecionado
-//        } 
-//        else{
-//            // Caso não tenha nenhum nome selecionado, enviamos para todos
-//            this.message.setAcao(Action.SEND_ALL);
-//        }
-//        
-//        if (!text.isEmpty()){
-//        this.message.setNome(name);
-//        this.message.setTexto(text);
-//        this.message.setAcao(Action.SEND_ALL);
-//        
-//        this.txtAreaRecebeMensagem.append(message.getNome()+ " diz " + text + "\n");
-//        this.service.send(this.message);
-//        }
-//        this.txtAreaDigitarMensagem.setText("");
-    }//GEN-LAST:event_btnEnviarActionPerformed
+    }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

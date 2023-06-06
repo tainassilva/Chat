@@ -62,9 +62,4 @@ public class ChatMessage implements Serializable {
     }
     // Cada mensagem que o cliente manda para o sevidor qual é a ação que ele quer executar 
 
-    @Override
-    public String toString() {
-        return "ChatMessage{" + "nome=" + nome + ", texto=" + texto + ", reservado_nome=" + reservado_nome + ", setOnlines=" + setOnlines + ", acao=" + acao + '}';
-    }
-    
 }

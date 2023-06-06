@@ -14,7 +14,7 @@ public class ChatMessage implements Serializable {
     private String texto;
     private String reservado_nome;
     private Set<String> setOnlines = new HashSet<String>(); // Lista de usuarios online onde casda aplicação cliente vai receber
-    private Action acao; // vai conter o enum porque se torna mais facil trasbvalhaer com enum do que com variaveis estaticas
+    private Action acao; // vai conter o enum porque se torna mais facil trabalhar com enum do que com variaveis estaticas
 
     public String getNome() {
         return nome;
@@ -26,6 +26,7 @@ public class ChatMessage implements Serializable {
 
     public String getTexto() {
         return texto;
+        
     }
 
     public void setTexto(String texto) {
@@ -61,11 +62,6 @@ public class ChatMessage implements Serializable {
         CONECTADO, DESCONECTADO,SEND_ONE, SEND_ALL, USUARIOS_ONLINE
     }
     // Cada mensagem que o cliente manda para o sevidor qual é a ação que ele quer executar 
-
-    @Override
-    public String toString() {
-        return "ChatMessage{" + "nome=" + nome + ", texto=" + texto + ", reservado_nome=" + reservado_nome + ", setOnlines=" + setOnlines + ", acao=" + acao + '}';
-    }
     
     
 }
