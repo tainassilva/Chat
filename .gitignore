@@ -5,3 +5,5 @@ cliente/build
 cliente/nbproject
 servidor/build
 servidor/nbproject
+.classpath
+.project
