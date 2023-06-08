@@ -1,4 +1,7 @@
-/build
-/nbproject
-build.xml
-manifest.mf
+# ATENÇÃO! PASTAS DEVEM COMEÇAR COM LETRA MINUSCULAS
+
+.vscode
+cliente/build
+cliente/nbproject
+servidor/build
+servidor/nbproject
