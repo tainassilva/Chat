@@ -13,5 +13,5 @@ Trabalho realizado pelos estudantes de ciência da computação da universidade 
 O sitema tem como funcionalidades
 - Conectar com o servidor através de sockets
 - Enviar mensagens para todos os usuários conectados
-- Enviar mensagem para sómente um usuário
+- Enviar mensagem para somente um usuário
 - Desconectar do servidor
